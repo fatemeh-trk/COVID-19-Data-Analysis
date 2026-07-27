@@ -51,25 +51,46 @@ for location , loc_Data in df_Q1.groupby("location"):
 
         results.append({
             "location":location,
-            "slope":slope,
-            "r_squared":r_two})
+            "infection_slope":slope,
+            "infection_r_squared":r_two})
 
 reg_df = pd.DataFrame(results)
-q1_result = reg_df[(reg_df["slope"] < 0)& (reg_df["r_squared"] > 0.7)]
-
-
-os.makedirs("Output", exist_ok=True)
-
-q1_result.to_csv(
-    "Output/q1_regression_results.csv",
-    index=False
-)
+q1_result_1 = reg_df[(reg_df["infection_slope"] < 0)& (reg_df["infection_r_squared"] > 0.7)]
 
 
 
+results_2 = []
+for location , loc_Data in df_Q1.groupby("location"):
+    clean_non_values = loc_Data.dropna(subset=["new_deaths_ma7"]).tail(180)
+
+    if(len(clean_non_values)> 30):
+        y = clean_non_values["new_deaths_ma7"]
+        x=np.arange(len(clean_non_values))
+
+        reg_result_2 = linregress(x,y)
+        
+        slope2 = (reg_result_2.slope).round(4)
+        rvalue2 = reg_result_2.rvalue
+        r_two2 = (rvalue2 ** 2).round(4)
+
+        results_2.append({
+            "location":location,
+            "mortality_slope":slope2,
+            "mortality_r_squared":r_two2})
+reg_df_2 = pd.DataFrame(results_2)
+q1_result_2 = reg_df_2[(reg_df_2["mortality_slope"] < 0)& (reg_df_2["mortality_r_squared"] > 0.8)]
 
 
 
+
+q1_final_technical_result = q1_result_1.merge(q1_result_2 ,on = "location",how = "outer")
+
+q1_final_status = np.select(condlist = [(q1_final_technical_result["infection_slope"].notna()) &(q1_final_technical_result["mortality_slope"].notna())  ,
+                        (q1_final_technical_result["infection_slope"].isna())& (q1_final_technical_result["mortality_slope"].notna())],
+          choicelist = ["infection & mortality" , "mortality only"],
+          default = "infection only")
+
+q1_final_technical_result["status"] = q1_final_status
 
 
 

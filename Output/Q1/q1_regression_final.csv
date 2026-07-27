@@ -1,0 +1,6 @@
+location,infection_slope,infection_r_squared,mortality_slope,mortality_r_squared,status
+Morocco,-26.7785,0.7648,-0.4531,0.8851,infection & mortality
+Myanmar,-9.4793,0.838,-0.1884,0.8721,infection & mortality
+Russia,-118.7822,0.7372,,,infection only
+Switzerland,,,-0.5924,0.8127,mortality only
+Tajikistan,-0.2908,0.7097,,,infection only

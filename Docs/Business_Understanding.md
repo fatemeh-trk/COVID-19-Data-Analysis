@@ -62,6 +62,48 @@ How do demographic factors such as population size and age distribution relate t
 What patterns and lessons can be identified from historical COVID-19 data to support preparedness for future public health emergencies?
 
 
+## Q1 Analysis Methodology
+
+To answer the first business question, a trend analysis was performed using Linear Regression on 7-day moving averages of COVID-19 cases and deaths.
+
+### Analysis Process
+
+1. Calculate a 7-day moving average for:
+   - New Cases
+   - New Deaths
+
+2. Remove missing values.
+
+3. Evaluate only countries with at least 30 valid observations.
+
+4. Analyze the most recent 180 days of data.
+
+5. Apply Linear Regression where:
+   - X = Time (days)
+   - Y = 7-day moving average
+
+6. Evaluate:
+   - Slope
+   - R² (Coefficient of Determination)
+
+7. Selection Criteria
+
+Countries were considered to have a sustained decreasing trend if:
+
+- Slope < 0
+- Infection Trend: R² > 0.70
+- Mortality Trend: R² > 0.80
+
+8. Final Classification
+
+The final results were categorized into:
+
+- Infection Only
+- Mortality Only
+- Infection & Mortality
+
+
+
 ## Business Problem
 
 Large volumes of COVID-19 data are collected daily from countries around the world. However, the complexity and scale of these datasets make it difficult to identify meaningful trends, compare country performance, and evaluate the effectiveness of public health interventions.
@@ -79,3 +121,16 @@ This project addresses these challenges by transforming raw COVID-19 data into m
 - Support evidence-based healthcare resource allocation.
 - Compare pandemic management performance across countries and regions.
 - Communicate analytical findings through interactive dashboards and data storytelling.
+
+
+## Q1 Key Findings
+
+The regression analysis identified countries with sustained decreasing pandemic trends based on infection and mortality indicators.
+
+Countries were classified into three categories according to the regression results:
+
+- Infection Only
+- Mortality Only
+- Infection & Mortality
+
+These findings provide an objective overview of countries that demonstrated stable improvements during the analyzed period and support further evaluation in the following business questions.
