@@ -14,7 +14,6 @@ df["date"] = pd.to_datetime(df["date"])
 df_Q1 = df.sort_values(["location","date"])
 
 
-
 df_Q1["case_rate"] = (df_Q1["total_cases"] / df_Q1["population"]).round(6)
 df_Q1["death_rate"] = (df_Q1["total_deaths"] / df_Q1["population"]).round(6)
 
@@ -95,14 +94,23 @@ q1_final_technical_result["status"] = q1_final_status
 
 
 
+#To what extent did COVID-19 vaccination programs contribute to reducing infection and mortality trends across different countries?
+
+vaccination_df = df.groupby("location")["people_fully_vaccinated_per_hundred"].apply(lambda x:x.dropna().iloc[-1] if not x.dropna().empty else np.nan).reset_index(name = "vaccination_percent")
+
+vaccination_df = vaccination_df.dropna(subset=["vaccination_percent"])
+vaccination_quartiles = vaccination_df["vaccination_percent"].quantile([0.25,0.5,0.75])
+
+q1 = vaccination_quartiles.loc[0.25]
+q2 = vaccination_quartiles.loc[0.5]
+q3 = vaccination_quartiles.loc[0.75]
+
+choices = ["low","medium"]
+conditions = [(vaccination_df["vaccination_percent"] <= q1) ,
+              (vaccination_df["vaccination_percent"] <= q3)]
 
 
-
-
-
-
-
-
+vaccination_df["vaccination_group"] = np.select(conditions,choices,default="high") 
 
 
 
